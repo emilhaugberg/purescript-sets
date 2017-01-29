@@ -37,6 +37,9 @@ intersection :: forall a. Eq a => Set a -> Set a -> Set a
 intersection setA setB =
   Set <<< Arr.filter (\a -> contains a setB) <<< fromSet $ setA
 
+disjoint :: forall a. (Ord a, Eq a) => Set a -> Set a -> Boolean
+disjoint setA = eq empty <<< intersection setA
+
 insert :: forall a. a -> Set a -> Set a
 insert x  = Set <<< Arr.cons x <<< fromSet
 
