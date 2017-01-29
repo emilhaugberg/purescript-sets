@@ -6,6 +6,7 @@ import Data.Maybe (maybe)
 import Data.Monoid (class Monoid)
 import Prelude
 
+type Collection = Array
 data Set a = Set (Array a)
 
 -- | check if a set contains a value a
@@ -25,6 +26,13 @@ proper a b = subset a b && not (eq a b)
 -- | transitive sets A, B, and C such that if A `f` B and B `f` C then A `f` C
 transitive :: forall a. (Set a -> Set a -> Boolean) -> Set a -> Set a -> Set a -> Boolean
 transitive f a b c = if a `f` b && b `f` c then true else false
+
+-- | Union of a collection of sets is the set of all elements in the collection
+union :: forall a. Collection (Set a) -> Set a
+union = foldl append empty
+
+insert :: forall a. a -> Set a -> Set a
+insert x (Set a) = Set $ Arr.cons x a
 
 fromSet :: forall a. Set a -> Array a
 fromSet (Set a) = a
