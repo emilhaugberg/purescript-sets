@@ -31,8 +31,14 @@ transitive f a b c = if a `f` b && b `f` c then true else false
 union :: forall a. Collection (Set a) -> Set a
 union = foldl append empty
 
+-- | the intersection A ∩ B of two sets A and B is the set that contains
+-- | all elements of A that also belong to B (or the other way around).
+intersection :: forall a. Eq a => Set a -> Set a -> Set a
+intersection setA setB =
+  Set <<< Arr.filter (\a -> contains a setB) <<< fromSet $ setA
+
 insert :: forall a. a -> Set a -> Set a
-insert x (Set a) = Set $ Arr.cons x a
+insert x  = Set <<< Arr.cons x <<< fromSet
 
 fromSet :: forall a. Set a -> Array a
 fromSet (Set a) = a
