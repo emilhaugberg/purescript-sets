@@ -18,7 +18,7 @@ subset a b =
   foldl (\bool a' -> bool && contains a' b) true a
 
 -- | check if set a is a proper subset of b
-proper :: forall a. Eq a => Set a -> Set a -> Boolean
+proper :: forall a. (Eq a, Ord a) => Set a -> Set a -> Boolean
 proper a b = subset a b && not (eq a b)
 
 -- | check if sets are transitive
@@ -32,8 +32,10 @@ fromSet (Set a) = a
 empty :: forall a. Set a
 empty = Set []
 
-instance eqSet :: Eq a => Eq (Set a) where
-  eq (Set arr) (Set arr') = arr == arr'
+instance eqSet :: (Eq a, Ord a) => Eq (Set a) where
+  eq (Set a) (Set b) = f a == f b
+    where
+      f = Arr.sort <<< Arr.nub
 
 instance semigroupSet :: Semigroup (Set a) where
   append (Set arr) (Set arr') = Set (append arr arr')

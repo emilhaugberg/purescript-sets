@@ -18,8 +18,8 @@ main = runTest do
       Assert.assertFalse "Should not contain 5" $ contains 5 (Set [1,2,4])
 
     test "subset" do
-      Assert.assert      "Should be a subset"            $ subset (Set [1,2,3]) (Set [1, 2, 3, 4, 5])
-      Assert.assert      "Equal sets should be a subset" $ subset (Set [1,2,3]) (Set [1, 2, 3])
+      Assert.assert      "Should be a subset"            $ subset (Set [1,2,3]) (Set [1, 3, 4, 2, 5])
+      Assert.assert      "Equal sets should be a subset" $ subset (Set [1,2,3]) (Set [3, 2, 1])
       Assert.assertFalse "Should not be a subset"        $ subset (Set [3,4])   (Set [1, 2, 4])
 
     test "proper" do
