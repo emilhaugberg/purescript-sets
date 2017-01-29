@@ -33,5 +33,5 @@ main = runTest do
       Assert.assertFalse "Should not be a subset"               $ proper (Set [3,4])   (Set [1, 2, 4])
 
     test "union" do
-      Assert.assert      "Union of {1,2,3} & Set {3,4,5} should be {1,2,3,4,5}" $ eq (Set [1,2,3,4,5]) (union [Set [1,2,3], Set [3, 4, 5]])
-      Assert.assert      "Union of {3,1,2} & Set {4,4,4} should be {1,2,3,4}"   $ eq (Set [1,2,3,4]) (union [Set [1,2,3], Set [4, 4, 4]])
+      Assert.assert      "Union of {1,2,3} & {3,4,5} should be {1,2,3,4,5}" $ eq (Set [1,2,3,4,5]) (union [Set [1,2,3], Set [3, 4, 5]])
+      Assert.assert      "Union of {3,1,2} & {4,4,4} should be {1,2,3,4}"   $ eq (Set [1,2,3,4])   (union [Set [1,2,3], Set [4, 4, 4]])
