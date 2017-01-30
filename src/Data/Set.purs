@@ -8,7 +8,7 @@ import Prelude
 type Collection = Array
 newtype Set a = Set (Array a)
 
-infixl 8 contains as ∈
+infixl 6 contains as ∈
 
 -- | check if a set contains a value a
 contains :: forall a. Eq a => a -> Set a -> Boolean
@@ -21,9 +21,11 @@ subset :: forall a. Eq a => Set a -> Set a -> Boolean
 subset a b =
   foldl (\bool a' -> bool && a' ∈ b) true a
 
+infix 8 notEq as ≠
+
 -- | check if set a is a proper subset of b
 proper :: forall a. (Eq a, Ord a) => Set a -> Set a -> Boolean
-proper a b = a ⊆ b && not (a == b)
+proper a b = a ⊆ b && a ≠ b
 
 -- | check if sets are transitive
 -- | transitive sets A, B, and C such that if A `f` B and B `f` C then A `f` C
@@ -33,16 +35,15 @@ transitive f a b c = a `f` b && b `f` c
 infixl 6 union as ∪
 
 -- | Union of a collection of sets is the set of all elements in the collection
-union :: forall a. Collection (Set a) -> Set a
-union = foldl append empty
+union :: forall a. Set a -> Set a -> Set a
+union = append
 
 infixl 8 intersection as ∩
 
 -- | the intersection A ∩ B of two sets A and B is the set that contains
 -- | all elements of A that also belong to B (or the other way around).
 intersection :: forall a. Eq a => Set a -> Set a -> Set a
-intersection setA setB =
-  Set <<< Arr.filter (\a -> contains a setB) <<< fromSet $ setA
+intersection setA setB = Set <<< Arr.filter (\a -> contains a setB) <<< fromSet $ setA
 
 disjoint :: forall a. (Ord a, Eq a) => Set a -> Set a -> Boolean
 disjoint setA setB = empty == setA ∩ setB
