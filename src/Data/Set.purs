@@ -1,21 +1,20 @@
 module Data.Set where
 
 import Data.Array as Arr
-import Data.Foldable (class Foldable, foldMap, foldl, foldr)
-import Data.Maybe (maybe)
+import Data.Foldable (class Foldable, foldMap, foldl, foldr, elem)
 import Data.Monoid (class Monoid)
 import Prelude
 
 type Collection = Array
 newtype Set a = Set (Array a)
 
-infix 8 contains as ∈
+infixl 8 contains as ∈
 
 -- | check if a set contains a value a
 contains :: forall a. Eq a => a -> Set a -> Boolean
-contains val = maybe false (const true) <<< Arr.findIndex (eq val) <<< fromSet
+contains = elem
 
-infix 8 subset as ⊆
+infixl 8 subset as ⊆
 
 -- | check if set a is a subset of b
 subset :: forall a. Eq a => Set a -> Set a -> Boolean
@@ -24,20 +23,20 @@ subset a b =
 
 -- | check if set a is a proper subset of b
 proper :: forall a. (Eq a, Ord a) => Set a -> Set a -> Boolean
-proper a b = a ⊆ b && not (eq a b)
+proper a b = a ⊆ b && not (a == b)
 
 -- | check if sets are transitive
 -- | transitive sets A, B, and C such that if A `f` B and B `f` C then A `f` C
 transitive :: forall a. (Set a -> Set a -> Boolean) -> Set a -> Set a -> Set a -> Boolean
 transitive f a b c = a `f` b && b `f` c
 
-infix 8 union as ∪
+infixl 6 union as ∪
 
 -- | Union of a collection of sets is the set of all elements in the collection
 union :: forall a. Collection (Set a) -> Set a
 union = foldl append empty
 
-infix 8 intersection as ∩
+infixl 8 intersection as ∩
 
 -- | the intersection A ∩ B of two sets A and B is the set that contains
 -- | all elements of A that also belong to B (or the other way around).
@@ -46,7 +45,7 @@ intersection setA setB =
   Set <<< Arr.filter (\a -> contains a setB) <<< fromSet $ setA
 
 disjoint :: forall a. (Ord a, Eq a) => Set a -> Set a -> Boolean
-disjoint setA = eq empty <<< intersection setA
+disjoint setA setB = empty == setA ∩ setB
 
 insert :: forall a. a -> Set a -> Set a
 insert x  = Set <<< Arr.cons x <<< fromSet

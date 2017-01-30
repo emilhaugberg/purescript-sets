@@ -15,9 +15,9 @@ main :: forall eff. Eff ("console" :: CONSOLE, "testOutput" :: TESTOUTPUT, "avar
 main = runTest do
   suite "Basic set functions" do
     test "equals" do
-      Assert.assert      "Should be equal"      $ eq (Set [1,1,1])   (Set [1])
+      Assert.assert      "Should be equal"      $ eq (Set [1,1,1]) (Set [1])
       Assert.assert      "Should be equal"      $ eq (Set [5,4,3]) (Set [3,5,4])
-      Assert.assertFalse "Should not be equal " $ eq (Set [5,4])    (Set [3,5,4])
+      Assert.assertFalse "Should not be equal " $ eq (Set [5,4])   (Set [3,5,4])
 
     test "contains" do
       Assert.assert      "Should contain 5"     $ 5 ∈ Set [1,2,4,5]
