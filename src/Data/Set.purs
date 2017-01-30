@@ -21,7 +21,8 @@ subset :: forall a. Eq a => Set a -> Set a -> Boolean
 subset a b =
   foldl (\bool a' -> bool && a' ∈ b) true a
 
-infix 8 notEq as ≠
+infix  8 notEq  as ≠
+infixl 8 proper as ⊂
 
 -- | check if set a is a proper subset of b
 proper :: forall a. (Eq a, Ord a) => Set a -> Set a -> Boolean
@@ -37,6 +38,9 @@ infixl 6 union as ∪
 -- | Union of a collection of sets is the set of all elements in the collection
 union :: forall a. Set a -> Set a -> Set a
 union = append
+
+unionCollection :: forall a. Collection (Set a) -> Set a
+unionCollection = foldl (∪) empty
 
 infixl 8 intersection as ∩
 

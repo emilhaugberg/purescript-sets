@@ -4,7 +4,7 @@ import Prelude (Unit, bind, eq, ($), (==))
 import Control.Monad.Aff.AVar (AVAR)
 import Control.Monad.Eff (Eff)
 import Control.Monad.Eff.Console (CONSOLE)
-import Data.Set (Set(..), disjoint, intersection, proper, (∈), (⊆), (∪))
+import Data.Set (Set(..), disjoint, (∈), (⊆), (∪), (⊂), (∩))
 import Data.Set (empty) as Set
 import Test.Unit (suite, test)
 import Test.Unit.Assert as Assert
@@ -29,18 +29,18 @@ main = runTest do
       Assert.assertFalse "Should not be a subset"        $ Set [3,4]   ⊆ Set [1,2,4]
 
     test "proper" do
-      Assert.assert      "Should be a subset"                   $ proper (Set [1,2,3]) (Set [1,2,3,4,5])
-      Assert.assertFalse "Equal sets should be a proper subset" $ proper (Set [1,2,3]) (Set [1,2,3])
-      Assert.assertFalse "Should not be a subset"               $ proper (Set [3,4])   (Set [1,2,4])
+      Assert.assert      "Should be a proper subset"                $ Set [1,2,3] ⊂ Set [1,2,3,4,5]
+      Assert.assertFalse "Equal sets should not be a proper subset" $ Set [1,2,3] ⊂ Set [1,2,3]
+      Assert.assertFalse "Should not be a proper subset"            $ Set [1,2,3] ⊂ Set [1,2,4]
 
     test "union" do
       Assert.assert "Union of {1,2,3} & {3,4,5} should be {1,2,3,4,5}" $ Set [1,2,3,4,5] == Set [1,2,3] ∪ Set [3,4,5]
       Assert.assert "Union of {3,1,2} & {4,4,4} should be {1,2,3,4}"   $ Set [1,2,3,4]   == Set [1,2,3] ∪ Set [4,4,4]
 
     test "intersection" do
-      Assert.assert "Intersection of {1,2,3} & {3,4,5} should be {3}"   $ eq (Set [3])   (intersection (Set [1,2,3]) (Set [3,4,5]))
-      Assert.assert "intersection of {1,2,3} & {1,2,4} should be {1,2}" $ eq (Set [1,2]) (intersection (Set [1,2,3]) (Set [1,2,4]))
-      Assert.assert "intersection of {2,2,2} & {3,3,3} should be {}"    $ eq (Set.empty) (intersection (Set [2,2,2]) (Set [3,3,3]))
+      Assert.assert "Intersection of {1,2,3} & {3,4,5} should be {3}"   $ Set [3]   == Set [1,2,3] ∩ Set [3,4,5]
+      Assert.assert "intersection of {1,2,3} & {1,2,4} should be {1,2}" $ Set [1,2] == Set [1,2,3] ∩ Set [1,2,4]
+      Assert.assert "intersection of {2,2,2} & {3,3,3} should be {}"    $ Set.empty == Set [2,2,2] ∩ Set [3,3,3]
 
     test "disjoint" do
       Assert.assert      "{1,2,3} & {4,5,6} should be disjoint"     $ disjoint (Set [1,2,3]) (Set [4,5,6])
