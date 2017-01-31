@@ -3,8 +3,8 @@ module Data.Set where
 import Data.Array as Arr
 import Data.Foldable (class Foldable, foldMap, foldl, foldr, elem)
 import Data.Monoid (class Monoid)
-import Data.Newtype (class Newtype, unwrap)
-import Prelude (class Eq, class Ord, class Semigroup, append, notEq, ($), (&&), (<<<), (==))
+import Data.Newtype (class Newtype, unwrap, over)
+import Prelude (class Eq, class Ord, class Semigroup, append, notEq, flip, ($), (&&), (<<<), (==))
 
 type Collection = Array
 
@@ -16,6 +16,11 @@ infixl 6 contains as ∈
 -- | check if a set contains a value a
 contains :: forall a. Eq a => a -> Set a -> Boolean
 contains = elem
+
+infixr 6 containsFlipped as ∋
+
+containsFlipped :: forall a. Eq a => Set a -> a -> Boolean
+containsFlipped = flip contains
 
 infixl 8 subset as ⊆
 
@@ -50,13 +55,13 @@ infixl 8 intersection as ∩
 -- | the intersection A ∩ B of two sets A and B is the set that contains
 -- | all elements of A that also belong to B (or the other way around).
 intersection :: forall a. Eq a => Set a -> Set a -> Set a
-intersection setA setB = Set <<< Arr.filter (\a -> contains a setB) <<< unwrap $ setA
+intersection setA setB = over Set (Arr.filter $ (∋) setB) setA
 
 disjoint :: forall a. (Ord a, Eq a) => Set a -> Set a -> Boolean
 disjoint setA setB = empty == setA ∩ setB
 
 insert :: forall a. a -> Set a -> Set a
-insert x  = Set <<< Arr.cons x <<< unwrap
+insert = over Set <<< Arr.cons
 
 empty :: forall a. Set a
 empty = Set []
