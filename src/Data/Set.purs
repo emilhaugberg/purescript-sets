@@ -4,7 +4,7 @@ import Data.Array as Arr
 import Data.Foldable (class Foldable, foldMap, foldl, foldr, elem)
 import Data.Monoid (class Monoid)
 import Data.Newtype (class Newtype, unwrap, over)
-import Prelude (class Eq, class Ord, class Semigroup, append, notEq, flip, ($), (&&), (<<<), (==))
+import Prelude (class Eq, class Ord, class Semigroup, append, notEq, flip, (&&), (<<<), (==))
 
 type Collection = Array
 
@@ -50,7 +50,9 @@ unionCollection = foldl (∪) empty
 infixl 8 intersection as ∩
 
 intersection :: forall a. Eq a => Set a -> Set a -> Set a
-intersection setA setB = over Set (Arr.filter $ (∋) setB) setA
+intersection setA setB = over Set (containsElem setB) setA
+  where
+    containsElem set = Arr.filter ((∋) set)
 
 disjoint :: forall a. (Ord a, Eq a) => Set a -> Set a -> Boolean
 disjoint setA setB = empty == setA ∩ setB
