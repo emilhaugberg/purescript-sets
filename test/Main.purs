@@ -36,7 +36,7 @@ main = runTest do
     test "union" do
       Assert.assert "Union of {1,2,3} & {3,4,5} should be {1,2,3,4,5}"                         $ Set [1,2,3,4,5] == Set [1,2,3] ∪ Set [3,4,5]
       Assert.assert "Union of {3,1,2} & {4,4,4} should be {1,2,3,4}"                           $ Set [1,2,3,4]   == Set [1,2,3] ∪ Set [4,4,4]
-      Assert.assert "Union of colletion {3,2,1} {4,5,6} {7,8,9} should be {1,2,3,4,5,6,7,8,9}" $ Set [1,2,3,4,5,6,7,8,9] == unionCollection [Set [3,2,1], Set [4,5,6], Set [7,8,9]]
+      Assert.assert "Union of collection {3,2,1} {4,5,6} {7,8,9} should be {1,2,3,4,5,6,7,8,9}" $ Set [1,2,3,4,5,6,7,8,9] == unionCollection [Set [3,2,1], Set [4,5,6], Set [7,8,9]]
 
     test "intersection" do
       Assert.assert "Intersection of {1,2,3} & {3,4,5} should be {3}"   $ Set [3]   == Set [1,2,3] ∩ Set [3,4,5]
