@@ -13,7 +13,7 @@ derive instance newtypeSet :: Newtype (Set a) _
 
 infixl 6 contains as ∈
 
--- | check if a set contains a value a
+-- | check if set A contains element a
 contains :: forall a. Eq a => a -> Set a -> Boolean
 contains = elem
 
@@ -22,33 +22,33 @@ infixr 6 containsFlipped as ∋
 containsFlipped :: forall a. Eq a => Set a -> a -> Boolean
 containsFlipped = flip contains
 
+-- | check if set A is a subset of set B
 infixl 8 subset as ⊆
 
--- | check if set a is a subset of b
 subset :: forall a. Eq a => Set a -> Set a -> Boolean
 subset a b =
   foldl (\bool a' -> bool && a' ∈ b) true a
 
-infix  8 notEq  as ≠
+-- | check if set A is a proper subset of set B
 infixl 8 proper as ⊂
+infix  8 notEq  as ≠
 
--- | check if set a is a proper subset of b
 proper :: forall a. (Eq a, Ord a) => Set a -> Set a -> Boolean
 proper a b = a ⊆ b && a ≠ b
 
+-- | Union of a collection of sets is the set of all elements in the collection
 infixl 6 union as ∪
 
--- | Union of a collection of sets is the set of all elements in the collection
 union :: forall a. Set a -> Set a -> Set a
 union = append
 
 unionCollection :: forall a. Collection (Set a) -> Set a
 unionCollection = foldl (∪) empty
 
-infixl 8 intersection as ∩
-
 -- | the intersection A ∩ B of two sets A and B is the set that contains
 -- | all elements of A that also belong to B (or the other way around).
+infixl 8 intersection as ∩
+
 intersection :: forall a. Eq a => Set a -> Set a -> Set a
 intersection setA setB = over Set (Arr.filter $ (∋) setB) setA
 
