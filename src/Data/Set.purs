@@ -3,10 +3,13 @@ module Data.Set where
 import Data.Array as Arr
 import Data.Foldable (class Foldable, foldMap, foldl, foldr, elem)
 import Data.Monoid (class Monoid)
-import Prelude
+import Data.Newtype (class Newtype, unwrap)
+import Prelude (class Eq, class Ord, class Semigroup, append, notEq, ($), (&&), (<<<), (==))
 
 type Collection = Array
+
 newtype Set a = Set (Array a)
+derive instance newtypeSet :: Newtype (Set a) _
 
 infixl 6 contains as ∈
 
@@ -47,16 +50,13 @@ infixl 8 intersection as ∩
 -- | the intersection A ∩ B of two sets A and B is the set that contains
 -- | all elements of A that also belong to B (or the other way around).
 intersection :: forall a. Eq a => Set a -> Set a -> Set a
-intersection setA setB = Set <<< Arr.filter (\a -> contains a setB) <<< fromSet $ setA
+intersection setA setB = Set <<< Arr.filter (\a -> contains a setB) <<< unwrap $ setA
 
 disjoint :: forall a. (Ord a, Eq a) => Set a -> Set a -> Boolean
 disjoint setA setB = empty == setA ∩ setB
 
 insert :: forall a. a -> Set a -> Set a
-insert x  = Set <<< Arr.cons x <<< fromSet
-
-fromSet :: forall a. Set a -> Array a
-fromSet (Set a) = a
+insert x  = Set <<< Arr.cons x <<< unwrap
 
 empty :: forall a. Set a
 empty = Set []
@@ -67,12 +67,12 @@ instance eqSet :: (Eq a, Ord a) => Eq (Set a) where
       f = Arr.sort <<< Arr.nub
 
 instance semigroupSet :: Semigroup (Set a) where
-  append (Set arr) (Set arr') = Set (append arr arr')
+  append (Set arr) (Set arr') = Set (arr `append` arr')
 
 instance monoidSet :: Monoid (Set a) where
   mempty = empty
 
 instance foldableSet :: Foldable Set where
-  foldMap f = foldMap f <<< fromSet
-  foldl f x = foldl f x <<< fromSet
-  foldr f x = foldr f x <<< fromSet
+  foldMap f = foldMap f <<< unwrap
+  foldl f x = foldl f x <<< unwrap
+  foldr f x = foldr f x <<< unwrap
