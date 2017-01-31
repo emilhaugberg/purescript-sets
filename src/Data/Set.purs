@@ -36,11 +36,6 @@ infixl 8 proper as ⊂
 proper :: forall a. (Eq a, Ord a) => Set a -> Set a -> Boolean
 proper a b = a ⊆ b && a ≠ b
 
--- | check if sets are transitive
--- | transitive sets A, B, and C such that if A `f` B and B `f` C then A `f` C
-transitive :: forall a. (Set a -> Set a -> Boolean) -> Set a -> Set a -> Set a -> Boolean
-transitive f a b c = a `f` b && b `f` c
-
 infixl 6 union as ∪
 
 -- | Union of a collection of sets is the set of all elements in the collection
