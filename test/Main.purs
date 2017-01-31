@@ -4,7 +4,7 @@ import Prelude (Unit, bind, eq, ($), (==))
 import Control.Monad.Aff.AVar (AVAR)
 import Control.Monad.Eff (Eff)
 import Control.Monad.Eff.Console (CONSOLE)
-import Data.Set (Set(..), disjoint, (∈), (⊆), (∪), (⊂), (∩))
+import Data.Set (Set(..), disjoint, unionCollection, (∈), (⊆), (∪), (⊂), (∩))
 import Data.Set (empty) as Set
 import Test.Unit (suite, test)
 import Test.Unit.Assert as Assert
@@ -34,8 +34,9 @@ main = runTest do
       Assert.assertFalse "Should not be a proper subset"            $ Set [1,2,3] ⊂ Set [1,2,4]
 
     test "union" do
-      Assert.assert "Union of {1,2,3} & {3,4,5} should be {1,2,3,4,5}" $ Set [1,2,3,4,5] == Set [1,2,3] ∪ Set [3,4,5]
-      Assert.assert "Union of {3,1,2} & {4,4,4} should be {1,2,3,4}"   $ Set [1,2,3,4]   == Set [1,2,3] ∪ Set [4,4,4]
+      Assert.assert "Union of {1,2,3} & {3,4,5} should be {1,2,3,4,5}"                         $ Set [1,2,3,4,5] == Set [1,2,3] ∪ Set [3,4,5]
+      Assert.assert "Union of {3,1,2} & {4,4,4} should be {1,2,3,4}"                           $ Set [1,2,3,4]   == Set [1,2,3] ∪ Set [4,4,4]
+      Assert.assert "Union of colletion {3,2,1} {4,5,6} {7,8,9} should be {1,2,3,4,5,6,7,8,9}" $ Set [1,2,3,4,5,6,7,8,9] == unionCollection [Set [3,2,1], Set [4,5,6], Set [7,8,9]]
 
     test "intersection" do
       Assert.assert "Intersection of {1,2,3} & {3,4,5} should be {3}"   $ Set [3]   == Set [1,2,3] ∩ Set [3,4,5]
