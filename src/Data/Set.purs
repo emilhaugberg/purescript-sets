@@ -55,16 +55,15 @@ unionCollection = foldl (∪) empty
 infixl 8 intersection as ∩
 
 intersection :: forall a. Eq a => Set a -> Set a -> Set a
-intersection setA setB = over Set (containsElem setB) setA
-  where
-    containsElem set = Arr.filter (\x -> set ∋ x)
+intersection setA setB = over Set (containsElem (∈) setB) setA
 
 infixl 8 difference as \
 
 difference :: forall a. Eq a => Set a -> Set a -> Set a
-difference setA setB = over Set (containsElemNot setB) setA
-  where
-    containsElemNot set = Arr.filter (\x -> x ∉ set)
+difference setA setB = over Set (containsElem (∉) setB) setA
+
+containsElem :: forall a. (a -> Set a -> Boolean) -> Set a -> (Array a -> Array a)
+containsElem f set = Arr.filter (\x -> f x set)
 
 disjoint :: forall a. (Ord a, Eq a) => Set a -> Set a -> Boolean
 disjoint setA setB = empty == setA ∩ setB
