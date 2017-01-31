@@ -4,7 +4,7 @@ import Data.Array as Arr
 import Data.Foldable (class Foldable, foldMap, foldl, foldr, elem)
 import Data.Monoid (class Monoid)
 import Data.Newtype (class Newtype, unwrap, over)
-import Prelude (class Eq, class Ord, class Semigroup, append, notEq, flip, (&&), (<<<), (==))
+import Prelude (class Eq, class Ord, class Semigroup, append, notEq, flip, not, (&&), (<<<), (==))
 
 type Collection = Array
 
@@ -17,7 +17,12 @@ infixl 6 contains as ∈
 contains :: forall a. Eq a => a -> Set a -> Boolean
 contains = elem
 
-infixr 6 containsFlipped as ∋
+infixl 6 not' as ∉
+
+not' :: forall a. Eq a => a -> Set a -> Boolean
+not' = not <<< elem
+
+infixl 6 containsFlipped as ∋
 
 containsFlipped :: forall a. Eq a => Set a -> a -> Boolean
 containsFlipped = flip contains
@@ -52,7 +57,14 @@ infixl 8 intersection as ∩
 intersection :: forall a. Eq a => Set a -> Set a -> Set a
 intersection setA setB = over Set (containsElem setB) setA
   where
-    containsElem set = Arr.filter ((∋) set)
+    containsElem set = Arr.filter (\x -> set ∋ x)
+
+infixl 8 difference as \
+
+difference :: forall a. Eq a => Set a -> Set a -> Set a
+difference setA setB = over Set (containsElemNot setB) setA
+  where
+    containsElemNot set = Arr.filter (\x -> x ∉ set)
 
 disjoint :: forall a. (Ord a, Eq a) => Set a -> Set a -> Boolean
 disjoint setA setB = empty == setA ∩ setB

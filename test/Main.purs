@@ -4,7 +4,7 @@ import Prelude (Unit, bind, eq, ($), (==))
 import Control.Monad.Aff.AVar (AVAR)
 import Control.Monad.Eff (Eff)
 import Control.Monad.Eff.Console (CONSOLE)
-import Data.Set (Set(..), disjoint, unionCollection, (∈), (⊆), (∪), (⊂), (∩))
+import Data.Set (Set(..), disjoint, unionCollection, (∈), (⊆), (∪), (⊂), (∩), (\))
 import Data.Set (empty) as Set
 import Test.Unit (suite, test)
 import Test.Unit.Assert as Assert
@@ -40,8 +40,13 @@ main = runTest do
 
     test "intersection" do
       Assert.assert "Intersection of {1,2,3} & {3,4,5} should be {3}"   $ Set [3]   == Set [1,2,3] ∩ Set [3,4,5]
-      Assert.assert "intersection of {1,2,3} & {1,2,4} should be {1,2}" $ Set [1,2] == Set [1,2,3] ∩ Set [1,2,4]
-      Assert.assert "intersection of {2,2,2} & {3,3,3} should be {}"    $ Set.empty == Set [2,2,2] ∩ Set [3,3,3]
+      Assert.assert "Intersection of {1,2,3} & {1,2,4} should be {1,2}" $ Set [1,2] == Set [1,2,3] ∩ Set [1,2,4]
+      Assert.assert "Intersection of {2,2,2} & {3,3,3} should be {}"    $ Set.empty == Set [2,2,2] ∩ Set [3,3,3]
+
+    test "difference" do
+      Assert.assert "Difference of {1,2,3} & {2,3,4} should be {1}"     $ Set [1]     == Set [1,2,3] \ Set [2,3,4]
+      Assert.assert "Difference of {2,3,4} & {1,2,3} should be {4}"     $ Set [4]     == Set [2,3,4] \ Set [1,2,3]
+      Assert.assert "Difference of {1,2,3} & {4,5,6} should be {1,2,3}" $ Set [1,2,3] == Set [1,2,3] \ Set [4,5,6]
 
     test "disjoint" do
       Assert.assert      "{1,2,3} & {4,5,6} should be disjoint"     $ disjoint (Set [1,2,3]) (Set [4,5,6])
